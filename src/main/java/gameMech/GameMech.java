@@ -69,6 +69,13 @@ public class GameMech extends HttpServlet implements Abonent, Runnable{
         return gameSession;
     }
 
+    public GameSession kickTurnPlayer(int gameId, String askedUserId) {
+        GameSession gameSession = sessionIdToGameSession.get(gameId);
+        if (gameSession.kickTurnPlayer(askedUserId))
+            return gameSession;
+        return null;
+    }
+
     @Override
     @SuppressWarnings("InfiniteLoopStatement")
     public void run() {

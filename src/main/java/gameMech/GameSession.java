@@ -1,10 +1,9 @@
 package gameMech;
 
 import accountService.AccountServiceError;
+import sun.awt.image.ImageWatched;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -16,6 +15,8 @@ public class GameSession {
     private int sessionId = sessionIdCreator.getAndIncrement();
     private LinkedList<String> usersId = new LinkedList<>();
     private String turnUserId;
+    private Date turnStartDate;
+    private String lastKickedUserId;
     private String winUser = null;
     private int lastResult = -1;
     private byte gameField[][]; // -1 - empty, 0 - 0-player, 1 - 1-player etc
@@ -36,9 +37,27 @@ public class GameSession {
         return count;
     }
 
+    private void nextTurn() {
+        byte index = 0;
+        for ( ; index < usersId.size(); ++index) {
+            if (turnUserId == usersId.get(index))
+                break;
+        }
+
+        for (int i = 0; i < usersId.size(); ++i) {
+            if (++index == usersId.size())
+                index = 0;
+
+            if (usersId.get(index) != null)
+                break;
+        }
+        turnUserId = usersId.get(index);
+    }
+
     public GameSession(LinkedList<String> usersId) {
         this.usersId = (LinkedList)usersId.clone();
-        this.turnUserId = this.usersId.get(0);
+        this.turnUserId = this.usersId.get(new Random().nextInt(this.usersId.size()));
+        this.turnStartDate = new Date();
         this.gameField = new byte[gameRes.getFIELD_SIZE()][gameRes.getFIELD_SIZE()];
         for (int i = 0; i < gameRes.getFIELD_SIZE(); ++i)
             for (int j = 0; j < gameRes.getFIELD_SIZE(); ++j) {
@@ -80,9 +99,20 @@ public class GameSession {
             }
         }
 
-        if (++index == usersId.size())
-            index = 0;
-        turnUserId = usersId.get(index);
+        nextTurn();
+    }
+
+    public boolean kickTurnPlayer(String askedUserId) {
+        if (askedUserId == turnUserId || winUser != null ||
+            (new Date().getTime() - turnStartDate.getTime()) / 1000 <= gameRes.getTURN_SAFE_TIME()) {
+            return false;
+        }
+
+        lastKickedUserId = turnUserId;
+        nextTurn();
+        int index = usersId.indexOf(lastKickedUserId);
+        usersId.set(index, null);
+        return true;
     }
 
     public int getSessionId() {
@@ -95,8 +125,17 @@ public class GameSession {
     public int getLastResult() {
         return lastResult;
     }
+    public String getLastKickedUserId() {
+        return lastKickedUserId;
+    }
     public LinkedList<String> getUsersId() {
-        return (LinkedList)usersId.clone();
+        LinkedList<String> list = new LinkedList<>();
+        for(String userId: this.usersId) {
+            if (userId != null) {
+                list.add(userId);
+            }
+        }
+        return list;
     }
     public String getTurnUserId() {
         return turnUserId;

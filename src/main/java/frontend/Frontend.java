@@ -7,6 +7,7 @@ import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import gameMech.MsgClientInfoRefreshHard;
 import gameMech.MsgInitGame;
+import gameMech.MsgKickTurnPlayer;
 import gameMech.MsgUserClick;
 import javafx.util.Pair;
 import message.Abonent;
@@ -130,6 +131,20 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
         }
     }
 
+    public void msgPlayerKicked(LinkedList<String> usersId, String kickedUserId, String turnUserId) {
+        String tmpl = "kicked %s %s";
+        UserSession kickedUserSession = sessionIdToUserSession.get(kickedUserId);
+        kickedUserSession.setInfoForSend(String.format(tmpl, kickedUserId, turnUserId));
+        kickedUserSession.setGameSessionId(-1);
+        kickedUserSession.setGameMechAddress(null);
+        kickedUserSession.setStatus(UserSession.Status.playingEnd);
+
+        for (String userId: usersId) {
+            UserSession userSession = sessionIdToUserSession.get(userId);
+            userSession.setInfoForSend(String.format(tmpl, kickedUserId, turnUserId));
+        }
+    }
+
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException
     {
@@ -215,19 +230,23 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
             }
 
             if (action.equals("game_refresh_hard")) {
-                if (userSession.isHardRefreshOff()) {
-                    userSession.setHardRefreshProcessing();
-                    messageService.sendMessage(new MsgClientInfoRefreshHard(
-                            getAddress(),
-                            userSession.getGameMechAddress(),
-                            userSession.getGameSessionId(),
-                            userSession.getSessionId()
-                    )
-                    );
-                }
-                if (userSession.isHardRefreshReady()) {
-                    userSession.setHardRefreshOff();
-                    response.getWriter().print(userSession.getGameTimeString() + " " + userSession.getInfoForSend());
+                if (userSession.getGameSessionId() == -1 || userSession.getGameMechAddress() == null) {
+                    response.getWriter().print("invalid game");
+                } else {
+                    if (userSession.isHardRefreshOff()) {
+                        userSession.setHardRefreshProcessing();
+                        messageService.sendMessage(new MsgClientInfoRefreshHard(
+                                getAddress(),
+                                userSession.getGameMechAddress(),
+                                userSession.getGameSessionId(),
+                                userSession.getSessionId()
+                        )
+                        );
+                    }
+                    if (userSession.isHardRefreshReady()) {
+                        userSession.setHardRefreshOff();
+                        response.getWriter().print(userSession.getGameTimeString() + " " + userSession.getInfoForSend());
+                    }
                 }
             }
             if (action.equals("game_refresh")) {
@@ -244,6 +263,10 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
                                                 x, y
                                             )
                                           );
+            }
+            if (action.equals("kick_turn_player")) {
+                messageService.sendMessage(new MsgKickTurnPlayer(getAddress(), userSession.getGameMechAddress(),
+                                                                    userSession.getGameSessionId(), sessionID));
             }
             return;
         }

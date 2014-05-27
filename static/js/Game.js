@@ -5,11 +5,34 @@ var yourId;
 var playersId = new Array();
 
 
+function playersInGameCount() {
+    var count = 0;
+    for (var i = 0; i < playersId.length; ++i) {
+        if (playersId[i] != undefined) {
+            count++;
+        }
+    }
+    return count;
+}
+
+function clearPlayersExtraInfo() {
+    for (var i = 0; i < playersId.length; ++i) {
+        if (playersId[i] != undefined) {
+            $(".player_{0}_extraInfo".replace('{0}', playersId[i]))[0].innerHTML = '';
+        }
+    }
+}
+
+
 function InitGame(data) {
     if (data == "")
         return;
     if (data == "invalid session") {
         window.location.href = "/";
+        return;
+    }
+    if (data == "invalid game") {
+        window.location.href = '/timer';
         return;
     }
 
@@ -102,6 +125,11 @@ function InitGame(data) {
 
     $(".LoadingMsg")[0].innerHTML = "";
     $(".GameInfo")[0].style.display = "";
+
+    $(".KickTurnPlayer").click(function (event) {
+        $.get('/ajax?action=kick_turn_player');
+        return false;
+    });
     inited = true;
 }
 
@@ -117,37 +145,47 @@ function UpdateGame(data) {
     var strArr = data.split(' ');
     $(".GameTimeValue")[0].innerHTML = strArr.shift();
 
-    try {
-        if (strArr[0] == "clicked") {
-            var win = (strArr[5] == "win");
+    if (strArr[0] == "clicked") {
+        var win = (strArr[5] == "win");
 
-            $('.button_{0}_{1}'.replace('{0}', strArr[1]).replace('{1}', strArr[2]))[0].innerHTML = strArr[3];
-            for (var i = 0; i < playersId.length; ++i) {
-                $(".player_{0}_extraInfo".replace('{0}', playersId[i]))[0].innerHTML = '';
-            }
+        $('.button_{0}_{1}'.replace('{0}', strArr[1]).replace('{1}', strArr[2]))[0].innerHTML = strArr[3];
+        clearPlayersExtraInfo();
 
-            if (win) {
-                $(".player_{0}_extraInfo".replace('{0}', strArr[4]))[0].innerHTML = '| выиграл';
-                gameEnd = true;
-                var gameStatus;
-                if (strArr[4] == yourId) {
-                    gameStatus = "Вы выиграли!";
-                } else {
-                    gameStatus = "Вы проиграли =(";
-                }
-                $(".GameStatus")[0].innerHTML = gameStatus;
-                $(".GameStatus")[0].style.fontWeight = 'bold';
-                $(".GoToNewGame")[0].style.display = '';
+        if (win) {
+            $(".player_{0}_extraInfo".replace('{0}', strArr[4]))[0].innerHTML = '| выиграл';
+            gameEnd = true;
+            var gameStatus;
+            if (strArr[4] == yourId) {
+                gameStatus = "Вы выиграли!";
             } else {
-                $(".player_{0}_extraInfo".replace('{0}', strArr[4]))[0].innerHTML = '| ходит';
+                gameStatus = "Вы проиграли =(";
             }
-
-            if (strArr[4] == yourId && !win) {
-                yourTurn = true;
-            }
+            $(".GameStatus")[0].innerHTML = gameStatus;
+            $(".GameStatus")[0].style.fontWeight = 'bold';
+            $(".GoToNewGame")[0].style.display = '';
+        } else {
+            $(".player_{0}_extraInfo".replace('{0}', strArr[4]))[0].innerHTML = '| ходит';
         }
-    } catch (e) {
-        console.log(e);
+
+        if (strArr[4] == yourId && !win) {
+            yourTurn = true;
+        }
+    } else if (strArr[0] == "kicked") {
+        if (strArr[1] == yourId) {
+            gameEnd = true;
+            yourTurn = false;
+            $(".GameStatus")[0].innerHTML = "Вы были исключены из игры";
+            $(".GoToNewGame")[0].style.display = '';
+        } else {
+            delete playersId[playersId.indexOf(strArr[1])];
+            $(".player_{0}".replace('{0}', strArr[1])).remove();
+
+            clearPlayersExtraInfo();
+            $(".player_{0}_extraInfo".replace('{0}', strArr[2]))[0].innerHTML = '| ходит';
+
+            if (strArr[2] == yourId)
+                yourTurn = true;
+        }
     }
 }
 

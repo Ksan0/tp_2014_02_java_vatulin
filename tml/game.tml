@@ -24,6 +24,9 @@
                             <div class="GameTime">Игра длится <span class="GameTimeValue"></span></div> <br/>
                             <div>Игроки:</div>
                             <div class="Players"></div>
+
+                            <br/>
+                            <a class="KickTurnPlayer" href="">Слишком долгий ход</a>
                         </div>
                     </td>
                 </tr>

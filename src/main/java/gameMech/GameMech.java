@@ -30,7 +30,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class GameMech extends HttpServlet implements Abonent, Runnable{
-    private static final DateFormat FORMATTER = new SimpleDateFormat("HH.mm.ss");
     private final MessageService messageService;
     private final Address address;
     private Map<Integer, GameSession> sessionIdToGameSession = new HashMap<>();

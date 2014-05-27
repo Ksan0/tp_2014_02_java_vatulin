@@ -1,5 +1,6 @@
 package accountService;
 
+import org.mockito.exceptions.verification.NeverWantedButInvoked;
 import utils.resources.InfoMessages;
 import utils.resources.Resources;
 
@@ -8,7 +9,6 @@ import utils.resources.Resources;
  */
 public class AccountServiceError {
     private Type type = Type.NoError;
-    private Object extraInfo = null;
 
     public enum Type {
         NoError,
@@ -23,13 +23,6 @@ public class AccountServiceError {
     }
     public AccountServiceError(Type type) {
         this.type = type;
-    }
-    public AccountServiceError(Type type, Object extraInfo) {
-        this.type = type;
-        this.extraInfo = extraInfo;
-    }
-    public AccountServiceError(Object extraInfo) {
-        this.extraInfo = extraInfo;
     }
 
     public String getMsg() {
@@ -47,9 +40,6 @@ public class AccountServiceError {
         }
 
         return null;
-    }
-    public Type getError() {
-        return type;
     }
 
     public boolean isError() {

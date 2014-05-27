@@ -23,15 +23,13 @@ public class VFS implements VFSInterface{
 
         public FileIterator(String path){
             File file = new File(path);
-            if(file != null) {
-                if(file.isDirectory()){
-                    File[] listFiles = file.listFiles();
-                    if (listFiles != null){
-                        Collections.addAll(files, listFiles);
-                    }
-                } else if(file.isFile()) {
-                    files.add(file);
+            if(file.isDirectory()){
+                File[] listFiles = file.listFiles();
+                if (listFiles != null){
+                    Collections.addAll(files, listFiles);
                 }
+            } else if(file.isFile()) {
+                files.add(file);
             }
         }
 

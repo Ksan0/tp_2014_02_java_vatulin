@@ -5,16 +5,6 @@ var yourId;
 var playersId = new Array();
 
 
-function playersInGameCount() {
-    var count = 0;
-    for (var i = 0; i < playersId.length; ++i) {
-        if (playersId[i] != undefined) {
-            count++;
-        }
-    }
-    return count;
-}
-
 function clearPlayersExtraInfo() {
     for (var i = 0; i < playersId.length; ++i) {
         if (playersId[i] != undefined) {

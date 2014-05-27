@@ -8,7 +8,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class SaxHandler extends DefaultHandler {
-    private static String CLASSNAME = "class";
+    private static final String CLASSNAME = "class";
     private String element = null;
     private Object object = null;
 

@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * oppa google style
  */
 public class MessageService {
-    public Map<Address, ConcurrentLinkedQueue<Msg>> messages = new HashMap<Address, ConcurrentLinkedQueue<Msg>>();
+    public Map<Address, ConcurrentLinkedQueue<Msg>> messages = new HashMap<>();
     private AddressService addressService = new AddressService();
 
     public void addService(Abonent abonent){

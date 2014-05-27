@@ -34,10 +34,6 @@ public class UserSession {
         playingEnd
     }
 
-    public UserSession(String sessionId, String login) {
-        this.sessionId = sessionId;
-        this.login = login;
-    }
     public UserSession(String sessionId, String login, Status status) {
         this.sessionId = sessionId;
         this.login = login;

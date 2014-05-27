@@ -1,10 +1,7 @@
 <class type="utils.resources.Connection">
     <PORT>8080</PORT>
-    <TEST_PORT>8085</TEST_PORT>
 
     <DB_URL>jdbc:mysql://localhost:3306/jproj_db</DB_URL>
     <DB_USER>root</DB_USER>
     <DB_PASSWORD></DB_PASSWORD>
-
-    <TEST_DB>jdbc:mysql://localhost:3306/jproj_db_test</TEST_DB>
 </class>

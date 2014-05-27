@@ -79,7 +79,7 @@ public class AccountService implements Runnable, Abonent{
         user = new UserDataSet(login, password);
         boolean result = dao.save(user);
         if (result)
-            return new AccountServiceError(user);
+            return new AccountServiceError();
         return new AccountServiceError(AccountServiceError.Type.Signup_badUserForm);
     }
     public AccountServiceError getUser(String login, String password) {
@@ -99,7 +99,7 @@ public class AccountService implements Runnable, Abonent{
 
         if (user == null || !password.equals(user.getPassword()))
             return new AccountServiceError(AccountServiceError.Type.Signin_badLoginOrPassword);
-        return new AccountServiceError(user);
+        return new AccountServiceError();
     }
 
     @Override

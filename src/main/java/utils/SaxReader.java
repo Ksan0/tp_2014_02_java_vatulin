@@ -1,7 +1,7 @@
 package utils;
 
 /**
- * Created by elvira on 19.04.14.
+ * oppa google style
  */
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;

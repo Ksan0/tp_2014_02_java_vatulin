@@ -1,29 +1,13 @@
 package gameMech;
 
-import accountService.AccountServiceError;
-import accountService.MsgAddUser;
-import accountService.MsgAuthUser;
-import frontend.PageGenerator;
-import frontend.UserSession;
 import message.Abonent;
 import message.Address;
 import message.MessageService;
-import utils.resources.Resources;
-import utils.resources.Template;
-import utils.resources.URL;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /*
  * oppa google style

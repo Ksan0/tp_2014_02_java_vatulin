@@ -1,12 +1,12 @@
 package frontend;
 
 import accountService.AccountServiceError;
-import accountService.MsgAddUser;
-import accountService.MsgAuthUser;
-import gameMech.MsgClientInfoRefreshHard;
-import gameMech.MsgInitGame;
-import gameMech.MsgKickTurnPlayer;
-import gameMech.MsgUserClick;
+import accountService.message.MsgAddUser;
+import accountService.message.MsgAuthUser;
+import gameMech.message.MsgClientInfoRefreshHard;
+import gameMech.message.MsgInitGame;
+import gameMech.message.MsgKickTurnPlayer;
+import gameMech.message.MsgUserClick;
 import message.Abonent;
 import message.Address;
 import message.MessageService;

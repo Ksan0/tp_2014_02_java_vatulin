@@ -1,0 +1,7 @@
+<class type="utils.resources.InfoMessages">
+    <BAD_LOGIN_OR_PASSWORD>Bad login or password</BAD_LOGIN_OR_PASSWORD>
+    <USER_ALREADY_EXISTS>Choose another login</USER_ALREADY_EXISTS>
+    <BAD_USER_FORM>Bad user form</BAD_USER_FORM>
+    <DB_NO_CONNECTION>DB has not connection</DB_NO_CONNECTION>
+    <WAIT_FOR_REG>Wait for registration</WAIT_FOR_REG>
+</class>

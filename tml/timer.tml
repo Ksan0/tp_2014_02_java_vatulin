@@ -1,0 +1,20 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Timer</title>
+    <script type="text/javascript" src="js/ClientTime.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+
+
+</head>
+<body onload='setInterval(function(){refresh()}, <#if refreshPeriod??>${refreshPeriod}</#if> ); setClientTime();'>
+<div class="page">
+    <div class="main">
+        <div>Время клиента: <span id='ClientTime'></span></div>
+        <div>Время сервера: <span id="ServerTime"></span><#if serverTime??>${serverTime}</#if></div>
+        <div id="userID">UserID: <#if userID??>${userID}</#if></div>
+        <div style="margin: 20px"><a class="back" href="/">Назад</a></div>
+    </div>
+</div>
+</body>
+</html>

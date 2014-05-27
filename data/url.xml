@@ -1,0 +1,8 @@
+<class type="utils.resources.URL">
+    <LOGIN>/login</LOGIN>
+    <REGISTER>/register</REGISTER>
+    <TIMER_PAGE>/timer</TIMER_PAGE>
+    <REGISTRATION_FORM>/registration</REGISTRATION_FORM>
+    <GAME>/game</GAME>
+    <AJAX>/ajax</AJAX>
+</class>

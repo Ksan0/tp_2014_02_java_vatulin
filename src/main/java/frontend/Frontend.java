@@ -7,7 +7,6 @@ import gameMech.MsgClientInfoRefreshHard;
 import gameMech.MsgInitGame;
 import gameMech.MsgKickTurnPlayer;
 import gameMech.MsgUserClick;
-import javafx.util.Pair;
 import message.Abonent;
 import message.Address;
 import message.MessageService;

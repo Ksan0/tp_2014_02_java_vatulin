@@ -32,9 +32,9 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
     private final Address address;
     private Map<String, UserSession> sessionIdToUserSession = new ConcurrentHashMap<>();
 
-    private LinkedList<String> findUsersForGame(String selfId) {
+    private ArrayList<String> findUsersForGame(String selfId) {
         utils.resources.Game gameResource = (utils.resources.Game)Resources.getInstance().getResource("data/game.xml");
-        LinkedList<String> playersId = new LinkedList<>();
+        ArrayList<String> playersId = new ArrayList<>();
         playersId.add(selfId);
 
         for (String userId: sessionIdToUserSession.keySet()) {
@@ -81,7 +81,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
         }
     }
 
-    public void msgGameInited(LinkedList<String> usersId, int gameSessionId, Address gameMechAddress) {
+    public void msgGameInited(ArrayList<String> usersId, int gameSessionId, Address gameMechAddress) {
         for (String userId: usersId) {
             UserSession userSession = sessionIdToUserSession.get(userId);
             userSession.setGameMechAddress(gameMechAddress);
@@ -90,7 +90,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
         }
     }
 
-    public void msgRefreshClientInfoHard(String userId, LinkedList<String> usersId, String turnUserId, String winnerId, String field) {
+    public void msgRefreshClientInfoHard(String userId, ArrayList<String> usersId, String turnUserId, String winnerId, String field) {
         UserSession userSession = sessionIdToUserSession.get(userId);
         if (userSession.isHardRefreshProcessing()) {
             utils.resources.Game gameRes = (utils.resources.Game)utils.resources.Resources.getInstance().getResource("data/game.xml");
@@ -113,7 +113,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
         }
     }
 
-    public void msgUserClicked(LinkedList<String> usersId, int result, int x, int y, String turnUserId, String winnerId) {
+    public void msgUserClicked(ArrayList<String> usersId, int result, int x, int y, String turnUserId, String winnerId) {
         String tmpl = "clicked %d %d %d %s"; // command x, y, result, {turnUserId|winUserId}, [win]
         if (winnerId != null)
             tmpl += " win";
@@ -128,7 +128,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
         }
     }
 
-    public void msgPlayerKicked(LinkedList<String> usersId, String kickedUserId, String turnUserId) {
+    public void msgPlayerKicked(ArrayList<String> usersId, String kickedUserId, String turnUserId) {
         String tmpl = "kicked %s %s";
         UserSession kickedUserSession = sessionIdToUserSession.get(kickedUserId);
         kickedUserSession.setInfoForSend(String.format(tmpl, kickedUserId, turnUserId));
@@ -186,7 +186,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
                         userSession.setStatus(UserSession.Status.waitingPlayer);
                     case waitingPlayer:
                         msg = "waiting players";
-                        LinkedList<String> usersId = findUsersForGame(userSession.getSessionId());
+                        ArrayList<String> usersId = findUsersForGame(userSession.getSessionId());
                         if (usersId != null) {
                             userSession.setStatus(UserSession.Status.waitingInit);
                             messageService.sendMessage( new MsgInitGame(

@@ -2,20 +2,20 @@ package frontend;
 
 import message.Address;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 /**
  * oppa google style
  */
 public class MsgUserClicked extends MsgToFrontend {
-    private LinkedList<String> userId;
+    private ArrayList<String> userId;
     private int result;
     private int x;
     private int y;
     private String turnUserId;
     private String winUser;
 
-    public MsgUserClicked(Address from, Address to, LinkedList<String> userId, int result, int x, int y,
+    public MsgUserClicked(Address from, Address to, ArrayList<String> userId, int result, int x, int y,
                           String turnUserId, String winUser) {
         super(from, to);
         this.userId = userId;

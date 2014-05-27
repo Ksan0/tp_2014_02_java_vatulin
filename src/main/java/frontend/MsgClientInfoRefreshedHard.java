@@ -3,19 +3,19 @@ package frontend;
 import accountService.AccountServiceError;
 import message.Address;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 /**
  * oppa google style
  */
 public class MsgClientInfoRefreshedHard extends MsgToFrontend {
     private String userId;
-    private LinkedList<String> usersId;
+    private ArrayList<String> usersId;
     private String turnUserId;
     private String winnerId;
     private String field;
 
-    public MsgClientInfoRefreshedHard(Address from, Address to, String userId, LinkedList<String> usersId, String turnUserId, String winnerId, String field) {
+    public MsgClientInfoRefreshedHard(Address from, Address to, String userId, ArrayList<String> usersId, String turnUserId, String winnerId, String field) {
         super(from, to);
         this.userId = userId;
         this.usersId = usersId;

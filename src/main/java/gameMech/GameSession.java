@@ -3,6 +3,7 @@ package gameMech;
 import accountService.AccountServiceError;
 import sun.awt.image.ImageWatched;
 
+import java.util.ArrayList;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -13,7 +14,7 @@ public class GameSession {
     private static final utils.resources.Game gameRes = (utils.resources.Game)utils.resources.Resources.getInstance().getResource("data/game.xml");
     private static AtomicInteger sessionIdCreator = new AtomicInteger();
     private int sessionId = sessionIdCreator.getAndIncrement();
-    private LinkedList<String> usersId = new LinkedList<>();
+    private ArrayList<String> usersId = new ArrayList<>();
     private String turnUserId;
     private Date turnStartDate;
     private String lastKickedUserId;
@@ -49,8 +50,8 @@ public class GameSession {
         turnUserId = usersId.get(index);
     }
 
-    public GameSession(LinkedList<String> usersId) {
-        this.usersId = (LinkedList<String>)usersId.clone();
+    public GameSession(ArrayList<String> usersId) {
+        this.usersId = new ArrayList<>(usersId);
         this.turnUserId = this.usersId.get(new Random().nextInt(this.usersId.size()));
         this.turnStartDate = new Date();
         this.gameField = new byte[gameRes.getFIELD_SIZE()][gameRes.getFIELD_SIZE()];
@@ -119,8 +120,8 @@ public class GameSession {
     public String getLastKickedUserId() {
         return lastKickedUserId;
     }
-    public LinkedList<String> getUsersId() {
-        LinkedList<String> list = new LinkedList<>();
+    public ArrayList<String> getUsersId() {
+        ArrayList<String> list = new ArrayList<>();
         for(String userId: this.usersId) {
             if (userId != null) {
                 list.add(userId);

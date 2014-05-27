@@ -21,7 +21,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -50,7 +50,7 @@ public class GameMech extends HttpServlet implements Abonent, Runnable{
         return messageService;
     }
 
-    public GameSession initGameSession(LinkedList<String> usersId) {
+    public GameSession initGameSession(ArrayList<String> usersId) {
         GameSession gameSession = new GameSession(usersId);
         sessionIdToGameSession.put(gameSession.getSessionId(), gameSession);
         return gameSession;

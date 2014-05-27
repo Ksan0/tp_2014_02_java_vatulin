@@ -2,16 +2,16 @@ package frontend;
 
 import message.Address;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 /**
  * oppa google style
  */
 public class MsgGameInited extends MsgToFrontend {
     private int gameSessionId;
-    private LinkedList<String> usersId;
+    private ArrayList<String> usersId;
 
-    public MsgGameInited(Address from, Address to, LinkedList<String> usersId, int gameSessionId) {
+    public MsgGameInited(Address from, Address to, ArrayList<String> usersId, int gameSessionId) {
         super(from, to);
         this.usersId = usersId;
         this.gameSessionId = gameSessionId;

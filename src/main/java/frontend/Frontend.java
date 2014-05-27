@@ -3,8 +3,6 @@ package frontend;
 import accountService.AccountServiceError;
 import accountService.MsgAddUser;
 import accountService.MsgAuthUser;
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import gameMech.MsgClientInfoRefreshHard;
 import gameMech.MsgInitGame;
 import gameMech.MsgKickTurnPlayer;
@@ -312,7 +310,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
 
             for (String userSessionId: sessionIdToUserSession.keySet()) {
                 UserSession userSession = sessionIdToUserSession.get(userSessionId);
-                if (userSession.getLogin() == login) {
+                if (userSession.getLogin().equals(login)) {
                     sessionIdToUserSession.remove(userSessionId);
                 }
             }
@@ -322,15 +320,15 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
         response.sendRedirect(urlResource.getTIMER_PAGE());
     }
 
-    public void sendPage(@NotNull HttpServletResponse response, @NotNull String tmpl,
-                          @Nullable String errorMsg) throws IOException{
+    public void sendPage(HttpServletResponse response, String tmpl,
+                          String errorMsg) throws IOException{
         Map <String, Object> responseData = new HashMap<>();
         responseData.put("error", errorMsg);
         response.getWriter().println(PageGenerator.getPage(tmpl, responseData));
     }
 
-    public void sendPage(@NotNull HttpServletResponse response, @NotNull String tmpl,
-                          @NotNull Map<String, Object> responseData) throws IOException{
+    public void sendPage(HttpServletResponse response, String tmpl,
+                          Map<String, Object> responseData) throws IOException{
         response.getWriter().println(PageGenerator.getPage(tmpl, responseData));
     }
 

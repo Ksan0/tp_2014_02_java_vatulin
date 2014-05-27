@@ -27,10 +27,10 @@ public class MsgUserClick extends MsgToGM {
         MessageService ms = gameMech.getMessageService();
         int result = gameSession.getLastResult();
         String winnerId = gameSession.getWinUser();
-        if (winnerId == null) {
-            if (result != -1)
-                ms.sendMessage(new MsgUserClicked(this.getTo(), this.getFrom(),
-                                gameSession.getUsersId(), result, x, y, gameSession.getTurnUserId()));
+        if (result != -1) {
+            ms.sendMessage(new MsgUserClicked(this.getTo(), this.getFrom(),
+                            gameSession.getUsersId(), result, x, y,
+                            gameSession.getTurnUserId(), winnerId));
         }
     }
 }

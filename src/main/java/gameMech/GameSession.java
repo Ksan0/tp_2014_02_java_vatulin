@@ -20,13 +20,30 @@ public class GameSession {
     private int lastResult = -1;
     private byte gameField[][]; // -1 - empty, 0 - 0-player, 1 - 1-player etc
 
+    private int calculateFilledPointsInDir(int startX, int startY, int dirX, int dirY, int index) {
+        int count = 0;
+        int tmpX = startX;
+        int tmpY = startY;
+        for (int i = 1; i < 5; ++i) {
+            tmpX += dirX;
+            tmpY += dirY;
+            if (tmpX < 0 || tmpX >= gameRes.getFIELD_SIZE() || tmpY < 0 || tmpY >= gameRes.getFIELD_SIZE() ||
+                    gameField[tmpX][tmpY] != index) {
+                break;
+            }
+            count++;
+        }
+        return count;
+    }
+
     public GameSession(String usersId[]) {
         Collections.addAll(this.usersId, usersId);
         this.turnUserId = this.usersId.get(0);
         this.gameField = new byte[gameRes.getFIELD_SIZE()][gameRes.getFIELD_SIZE()];
         for (int i = 0; i < gameRes.getFIELD_SIZE(); ++i)
-            for (int j = 0; j < gameRes.getFIELD_SIZE(); ++j)
+            for (int j = 0; j < gameRes.getFIELD_SIZE(); ++j) {
                 this.gameField[i][j] = -1;
+            }
     }
 
     public void userClick(String userId, int x, int y) {
@@ -46,8 +63,24 @@ public class GameSession {
         }
 
         lastResult = index;
-        gameField[x][y] = index++;
-        if (index == usersId.size())
+        gameField[x][y] = index;
+
+        for (int dirX = -1; dirX <= 1; ++dirX) {
+            for (int dirY = 0; dirY <= 1; ++dirY) {
+                if ((dirX == 0 && dirY == 0) || (dirX == 1 && dirY == 0)) {
+                    continue;
+                }
+
+                int count = calculateFilledPointsInDir(x, y, dirX, dirY, index) + 1;
+                count += calculateFilledPointsInDir(x, y, -dirX, -dirY, index);
+                if (count >= 5) {
+                    this.winUser = this.turnUserId;
+                    return;
+                }
+            }
+        }
+
+        if (++index == usersId.size())
             index = 0;
         turnUserId = usersId.get(index);
     }

@@ -1,7 +1,7 @@
 .page {
     border: 5px solid #066;
     border-radius: 20px;
-    width : 40%;
+    width : 70%;
     height: 600px;
     margin: 10% auto;
     background-color: #AEB5E4;
@@ -45,4 +45,24 @@
     font-weight: bold;
     font-size: 17px;
     color: darkslategray;
+}
+
+.GameField {
+    margin-left: 15%;
+}
+
+.GameInfo {
+    margin-left: 35%;
+}
+
+.GameTime {
+    margin-left: -23%;
+    font-size: x-large;
+    font-weight: bold;
+}
+
+.LoadingMsg {
+    margin-left: 70%;
+    font-size: xx-large;
+    font-weight: bold;
 }

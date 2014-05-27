@@ -13,18 +13,21 @@ public class MsgUserClicked extends MsgToFrontend {
     private int x;
     private int y;
     private String turnUserId;
+    private String winUser;
 
-    public MsgUserClicked(Address from, Address to, LinkedList<String> userId, int result, int x, int y, String turnUserId) {
+    public MsgUserClicked(Address from, Address to, LinkedList<String> userId, int result, int x, int y,
+                          String turnUserId, String winUser) {
         super(from, to);
         this.userId = userId;
         this.result = result;
         this.x = x;
         this.y = y;
         this.turnUserId = turnUserId;
+        this.winUser = winUser;
     }
 
     @Override
     void exec(Frontend frontend) {
-        frontend.msgUserClicked(userId, result, x, y, turnUserId);
+        frontend.msgUserClicked(userId, result, x, y, turnUserId, winUser);
     }
 }

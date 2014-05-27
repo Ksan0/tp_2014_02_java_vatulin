@@ -11,11 +11,22 @@
 <body <#if refreshPeriod??>onload='setInterval(function(){refresh()}, ${refreshPeriod} );'</#if>>
     <div class="page">
         <div class="main">
-            <div>Игра длится <span class="GameTime"></span></div>
-            <div>Ваш соперник ${opponentLogin}</div>
-            <br/>
             <div class="GameStatus"></div>
-            <div class="GameField">Loading...</div>
+            <table>
+                <tr>
+                    <td style="width: 500px;">
+                        <div class="LoadingMsg">Loading...</div>
+                        <div class="GameField"></div>
+                    </td>
+                    <td style="width: 40%;">
+                        <div class="GameInfo" style="display: none;">
+                            <div class="GameTime">Игра длится <span class="GameTimeValue">0:0</span></div> <br/>
+                            <div>Игроки:</div>
+                            <div class="Players"></div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 

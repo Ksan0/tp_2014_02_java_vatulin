@@ -22,7 +22,7 @@ public class MsgClientInfoRefreshHard extends MsgToGM {
         GameSession gameSession = gameMech.getGameSession(gameId);
         MessageService ms = gameMech.getMessageService();
         ms.sendMessage(new MsgClientInfoRefreshedHard(this.getTo(), this.getFrom(),
-                        userId, gameSession.getUsersId(), gameSession.getTurnUserId(),
+                        userId, gameSession.getUsersId(), gameSession.getTurnUserId(), gameSession.getWinUser(),
                         gameSession.getField()
                         )
                       );

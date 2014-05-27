@@ -74,26 +74,37 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
         }
     }
 
-    public void msgRefreshClientInfoHard(String userId, LinkedList<String> usersId, String turnUserId, String field) {
-        utils.resources.Game gameRes = (utils.resources.Game)utils.resources.Resources.getInstance().getResource("data/game.xml");
-
-        String tmpl = "refreshHard %d %d " + field;
-        String send = String.format(tmpl, gameRes.getFIELD_SIZE(), gameRes.getFIELD_SIZE());
-
+    public void msgRefreshClientInfoHard(String userId, LinkedList<String> usersId, String turnUserId, String winnerId, String field) {
         UserSession userSession = sessionIdToUserSession.get(userId);
         if (userSession.isHardRefreshProcessing()) {
-            userSession.setInfoForSend(userId == turnUserId ? (send + " you") : send);
+            utils.resources.Game gameRes = (utils.resources.Game)utils.resources.Resources.getInstance().getResource("data/game.xml");
+
+            String tmpl = "refreshHard %d %d " + field + " %s %d";
+            String login = sessionIdToUserSession.get(winnerId != null ? winnerId : turnUserId).getLogin();
+            String send = String.format(tmpl, gameRes.getFIELD_SIZE(), gameRes.getFIELD_SIZE(),
+                                        userSession.getLogin(), usersId.size());
+            Integer count = 0;
+            for (String uId: usersId) {
+                UserSession uSs = sessionIdToUserSession.get(uId);
+                send += " " + uSs.getLogin();
+                send += " " + (count++).toString();
+            }
+            send += " " + login + (winnerId != null ? " win" : "");
+
+            userSession.setInfoForSend(send);
             userSession.setHardRefreshReady();
         }
     }
 
-    public void msgUserClicked(LinkedList<String> usersId, int result, int x, int y, String turnUserId) {
+    public void msgUserClicked(LinkedList<String> usersId, int result, int x, int y, String turnUserId, String winnerId) {
+        String tmpl = "clicked %d %d %d %s"; // command x, y, result, {turnUserLogin|winUserLogin}, [win]
+        if (winnerId != null)
+            tmpl += " win";
+        String login = sessionIdToUserSession.get(winnerId != null ? winnerId : turnUserId).getLogin();
+
         for (String userId: usersId) {
             UserSession userSession = sessionIdToUserSession.get(userId);
-            String tmpl = "clicked %d %d %d";
-            if (userId.equals(turnUserId))
-                tmpl += " you";
-            userSession.setInfoForSend(String.format(tmpl, x, y, result));
+            userSession.setInfoForSend(String.format(tmpl, x, y, result, login));
         }
     }
 

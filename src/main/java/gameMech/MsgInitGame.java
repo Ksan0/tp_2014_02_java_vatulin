@@ -4,13 +4,15 @@ import frontend.MsgGameInited;
 import message.Address;
 import message.MessageService;
 
+import java.util.LinkedList;
+
 /**
  * oppa google style
  */
 public class MsgInitGame extends MsgToGM {
-    private String usersId[];
+    private LinkedList<String> usersId;
 
-    public MsgInitGame(Address from, Address to, String usersId[]) {
+    public MsgInitGame(Address from, Address to, LinkedList<String> usersId) {
         super(from, to);
         this.usersId = usersId;
     }

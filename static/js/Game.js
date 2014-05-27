@@ -1,7 +1,8 @@
 var inited = false;
 var yourTurn = false;
-var yourLogin;
-var playersLogin = new Array();
+var gameEnd = false;
+var yourId;
+var playersId = new Array();
 
 
 function InitGame(data) {
@@ -20,8 +21,12 @@ function InitGame(data) {
     var fieldPart = '<button class="button_{0}_{1}" style="width: 25px; height: 25px;">{2}</button>';
     var field = '';
     var strArr = data.split(' ');
+    var gameTime = strArr.shift();
+
     if (strArr[0] != "refreshHard")
         return;
+
+    $(".GameTimeValue")[0].innerHTML = gameTime;
 
     var fieldWidth = parseInt(strArr[1], 10);
     var fieldHeight = parseInt(strArr[2], 10);
@@ -57,30 +62,43 @@ function InitGame(data) {
         }
     }
 
-    yourLogin = strArr[4];
+    yourId = strArr[4];
 
     var logins = '';
     var playersCount = parseInt(strArr[5]);
-    var tmpl = "<div class='player_{0}'>[{1}] {0} <span class='player_{0}_extraInfo'></span></div>";
+    var tmpl = "<div class='player_{0}'>[{2}] {1} <span class='player_{0}_extraInfo'></span></div>";
     for (var i = 0; i < playersCount; i++) {
-        var playerLogin = strArr[6+i*2];
-        playersLogin.push(playerLogin);
-        var playerLetter = strArr[7+i*2];
-        logins += tmpl.replace(/\{0\}/g, playerLogin).replace('{1}', playerLetter);
+        var playerLogin = strArr[6+i*3];
+        var playerId = strArr[7+i*3];
+        playersId.push(playerId);
+        var playerLetter = strArr[8+i*3];
+        logins += tmpl.replace(/\{0\}/g, playerId).replace('{1}', playerLogin).replace('{2}', playerLetter);
     }
     $(".Players")[0].innerHTML = logins;
 
-    var win = (strArr[7+playersCount*2] == "win");
+    var win = (strArr[7+playersCount*3] == "win");
 
-    var turnOrWinPlayerLogin = strArr[6+playersCount*2];
-    if (turnOrWinPlayerLogin == yourLogin && !win)
+    var turnOrWinPlayerId = strArr[6+playersCount*3];
+    if (turnOrWinPlayerId == yourId && !win)
         yourTurn = true;
 
-    $(".player_{0}".replace('{0}', yourLogin))[0].style.fontWeight = 'bold';
+    $(".player_{0}".replace('{0}', yourId))[0].style.fontWeight = 'bold';
     var extraInfo = "| ходит";
-    if (win)
+    if (win) {
+        var gameStatus;
+        if (turnOrWinPlayerId == yourId) {
+            gameStatus = "Вы выиграли!";
+        } else {
+            gameStatus = "Вы проиграли =(";
+        }
+        $(".GameStatus")[0].innerHTML = gameStatus;
+        $(".GameStatus")[0].style.fontWeight = 'bold';
+        $(".GoToNewGame")[0].style.display = '';
+
         extraInfo = "| выиграл";
-    $(".player_{0}_extraInfo".replace('{0}', turnOrWinPlayerLogin))[0].innerHTML = extraInfo;
+        gameEnd = true;
+    }
+    $(".player_{0}_extraInfo".replace('{0}', turnOrWinPlayerId))[0].innerHTML = extraInfo;
 
     $(".LoadingMsg")[0].innerHTML = "";
     $(".GameInfo")[0].style.display = "";
@@ -97,26 +115,34 @@ function UpdateGame(data) {
     }
 
     var strArr = data.split(' ');
-    if (strArr.length <= 0)
-        return;
+    $(".GameTimeValue")[0].innerHTML = strArr.shift();
 
     try {
         if (strArr[0] == "clicked") {
             var win = (strArr[5] == "win");
-            console.log(!win);
 
             $('.button_{0}_{1}'.replace('{0}', strArr[1]).replace('{1}', strArr[2]))[0].innerHTML = strArr[3];
-            for (var i = 0; i < playersLogin.length; ++i) {
-                $(".player_{0}_extraInfo".replace('{0}', playersLogin[i]))[0].innerHTML = '';
+            for (var i = 0; i < playersId.length; ++i) {
+                $(".player_{0}_extraInfo".replace('{0}', playersId[i]))[0].innerHTML = '';
             }
 
             if (win) {
                 $(".player_{0}_extraInfo".replace('{0}', strArr[4]))[0].innerHTML = '| выиграл';
+                gameEnd = true;
+                var gameStatus;
+                if (strArr[4] == yourId) {
+                    gameStatus = "Вы выиграли!";
+                } else {
+                    gameStatus = "Вы проиграли =(";
+                }
+                $(".GameStatus")[0].innerHTML = gameStatus;
+                $(".GameStatus")[0].style.fontWeight = 'bold';
+                $(".GoToNewGame")[0].style.display = '';
             } else {
                 $(".player_{0}_extraInfo".replace('{0}', strArr[4]))[0].innerHTML = '| ходит';
             }
 
-            if (strArr[4] == yourLogin && !win) {
+            if (strArr[4] == yourId && !win) {
                 yourTurn = true;
             }
         }
@@ -137,5 +163,6 @@ function refresh() {
         url = '/ajax?action=game_refresh_hard';
     }
 
-    $.get(url, func);
+    if (!(inited && gameEnd))
+        $.get(url, func);
 }

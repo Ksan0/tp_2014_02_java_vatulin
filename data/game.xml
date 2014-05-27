@@ -1,4 +1,4 @@
 <class type="utils.resources.Game">
     <FIELD_SIZE>16</FIELD_SIZE>
-    <NEED_PLAYERS>2</NEED_PLAYERS>
+    <NEED_PLAYERS>1</NEED_PLAYERS>
 </class>

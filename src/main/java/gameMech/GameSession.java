@@ -36,8 +36,8 @@ public class GameSession {
         return count;
     }
 
-    public GameSession(String usersId[]) {
-        Collections.addAll(this.usersId, usersId);
+    public GameSession(LinkedList<String> usersId) {
+        this.usersId = (LinkedList)usersId.clone();
         this.turnUserId = this.usersId.get(0);
         this.gameField = new byte[gameRes.getFIELD_SIZE()][gameRes.getFIELD_SIZE()];
         for (int i = 0; i < gameRes.getFIELD_SIZE(); ++i)

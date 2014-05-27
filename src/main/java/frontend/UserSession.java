@@ -3,6 +3,8 @@ package frontend;
 import accountService.AccountServiceError;
 import message.Address;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,13 +22,16 @@ public class UserSession {
 
     private Address gameMechAddress = null;
     private int gameSessionId = -1;
+    private Date gameStartDate = null;
+    private Date gameEndDate = null;
 
     public enum Status {
         waitingReg,
         waitingLogin,
         waitingPlayer,
         waitingInit,
-        playing
+        playing,
+        playingEnd
     }
 
     public UserSession(String sessionId, String login) {
@@ -62,6 +67,14 @@ public class UserSession {
     public int getGameSessionId() {
         return gameSessionId;
     }
+    public String getGameTimeString() {
+        Date endDate = (gameEndDate != null ? gameEndDate : new Date());
+        long diff = endDate.getTime() - gameStartDate.getTime();
+        long sec = diff / 1000;
+        long min = sec / 60;
+        sec %= 60;
+        return String.format("%d:%d", min, sec);
+    }
 
     public boolean isHardRefreshOff() {
         return hardRefreshCalculating.get() == -1;
@@ -83,6 +96,19 @@ public class UserSession {
     }
 
     public void setStatus(Status status) {
+        switch (status) {
+            case playing:
+                gameStartDate = new Date();
+                break;
+            case playingEnd:
+                gameEndDate = new Date();
+                break;
+            case waitingPlayer:
+                gameStartDate = null;
+                gameEndDate = null;
+                break;
+        }
+
         this.status = status;
     }
     public void setError(AccountServiceError error) {

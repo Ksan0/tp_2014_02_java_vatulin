@@ -12,6 +12,7 @@
     <div class="page">
         <div class="main">
             <div class="GameStatus"></div>
+            <div class="GoToNewGame" style="display: none;"><a href="/timer">Начать новую игру</a></div>
             <table>
                 <tr>
                     <td style="width: 500px;">
@@ -20,7 +21,7 @@
                     </td>
                     <td style="width: 40%;">
                         <div class="GameInfo" style="display: none;">
-                            <div class="GameTime">Игра длится <span class="GameTimeValue">0:0</span></div> <br/>
+                            <div class="GameTime">Игра длится <span class="GameTimeValue"></span></div> <br/>
                             <div>Игроки:</div>
                             <div class="Players"></div>
                         </div>

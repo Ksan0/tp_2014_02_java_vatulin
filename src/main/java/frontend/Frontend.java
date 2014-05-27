@@ -8,6 +8,7 @@ import com.sun.istack.internal.Nullable;
 import gameMech.MsgClientInfoRefreshHard;
 import gameMech.MsgInitGame;
 import gameMech.MsgUserClick;
+import javafx.util.Pair;
 import message.Abonent;
 import message.Address;
 import message.MessageService;
@@ -33,6 +34,27 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
     private final Address address;
     private Map<String, UserSession> sessionIdToUserSession = new ConcurrentHashMap<>();
 
+    private LinkedList<String> findUsersForGame(String selfId) {
+        utils.resources.Game gameResource = (utils.resources.Game)Resources.getInstance().getResource("data/game.xml");
+        LinkedList<String> playersId = new LinkedList<>();
+        playersId.add(selfId);
+
+        for (String userId: sessionIdToUserSession.keySet()) {
+            if (!userId.equals(selfId)) {
+                UserSession userSession = sessionIdToUserSession.get(userId);
+                if (userSession.getStatus() == UserSession.Status.waitingPlayer) {
+                    playersId.add(userId);
+                    if (playersId.size() >= gameResource.getNEED_PLAYERS())
+                        break;
+                }
+            }
+        }
+
+        if (playersId.size() < gameResource.getNEED_PLAYERS())
+            return null;
+        return playersId;
+    }
+
     public Frontend(MessageService messageService){
         this.messageService = messageService;
         address = new Address();
@@ -57,10 +79,6 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
                 case waitingLogin:
                     session.setStatus(UserSession.Status.waitingPlayer);
                     break;
-                case waitingPlayer:
-                    break;
-                case playing:
-                    break;
             }
         }
     }
@@ -80,16 +98,17 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
             utils.resources.Game gameRes = (utils.resources.Game)utils.resources.Resources.getInstance().getResource("data/game.xml");
 
             String tmpl = "refreshHard %d %d " + field + " %s %d";
-            String login = sessionIdToUserSession.get(winnerId != null ? winnerId : turnUserId).getLogin();
+            String id = winnerId != null ? winnerId : turnUserId;
             String send = String.format(tmpl, gameRes.getFIELD_SIZE(), gameRes.getFIELD_SIZE(),
-                                        userSession.getLogin(), usersId.size());
+                                        userId, usersId.size());
             Integer count = 0;
             for (String uId: usersId) {
                 UserSession uSs = sessionIdToUserSession.get(uId);
                 send += " " + uSs.getLogin();
+                send += " " + uId;
                 send += " " + (count++).toString();
             }
-            send += " " + login + (winnerId != null ? " win" : "");
+            send += " " + id + (winnerId != null ? " win" : "");
 
             userSession.setInfoForSend(send);
             userSession.setHardRefreshReady();
@@ -97,14 +116,17 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
     }
 
     public void msgUserClicked(LinkedList<String> usersId, int result, int x, int y, String turnUserId, String winnerId) {
-        String tmpl = "clicked %d %d %d %s"; // command x, y, result, {turnUserLogin|winUserLogin}, [win]
+        String tmpl = "clicked %d %d %d %s"; // command x, y, result, {turnUserId|winUserId}, [win]
         if (winnerId != null)
             tmpl += " win";
-        String login = sessionIdToUserSession.get(winnerId != null ? winnerId : turnUserId).getLogin();
+        String id = winnerId != null ? winnerId : turnUserId;
 
         for (String userId: usersId) {
             UserSession userSession = sessionIdToUserSession.get(userId);
-            userSession.setInfoForSend(String.format(tmpl, x, y, result, login));
+            if (winnerId != null) {
+                userSession.setStatus(UserSession.Status.playingEnd);
+            }
+            userSession.setInfoForSend(String.format(tmpl, x, y, result, id));
         }
     }
 
@@ -148,16 +170,22 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
                     case waitingLogin:
                         msg = "waiting login";
                         break;
+                    case playingEnd:
+                        userSession.setStatus(UserSession.Status.waitingPlayer);
                     case waitingPlayer:
                         msg = "waiting players";
-                        String usersId[] = {userSession.getSessionId()};
-                        messageService.sendMessage( new MsgInitGame(
-                                                        getAddress(),
-                                                        messageService.getAddressService().getGameMechAddress(),
-                                                        usersId
-                                                    )
-                                                  );
-                        userSession.setStatus(UserSession.Status.waitingInit);
+                        LinkedList<String> usersId = findUsersForGame(userSession.getSessionId());
+                        if (usersId != null) {
+                            userSession.setStatus(UserSession.Status.waitingInit);
+                            messageService.sendMessage( new MsgInitGame(
+                                                            getAddress(),
+                                                            messageService.getAddressService().getGameMechAddress(),
+                                                            usersId
+                                                        )
+                                                      );
+                        } else {
+                            break;
+                        }
                     case waitingInit:
                         msg = "waiting game init";
                         break;
@@ -199,11 +227,11 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
                 }
                 if (userSession.isHardRefreshReady()) {
                     userSession.setHardRefreshOff();
-                    response.getWriter().print(userSession.getInfoForSend());
+                    response.getWriter().print(userSession.getGameTimeString() + " " + userSession.getInfoForSend());
                 }
             }
             if (action.equals("game_refresh")) {
-                response.getWriter().print(userSession.getInfoForSend());
+                response.getWriter().print(userSession.getGameTimeString() + " " + userSession.getInfoForSend());
             }
             if (action.equals("user_click")) {
                 int x = Integer.parseInt(request.getParameter("x"));
@@ -258,6 +286,13 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
                                             request.getSession().getId()
                                             )
                                         );
+
+            for (String userSessionId: sessionIdToUserSession.keySet()) {
+                UserSession userSession = sessionIdToUserSession.get(userSessionId);
+                if (userSession.getLogin() == login) {
+                    sessionIdToUserSession.remove(userSessionId);
+                }
+            }
             sessionIdToUserSession.put(ssid, new UserSession(ssid, login, UserSession.Status.waitingLogin));
         }
 

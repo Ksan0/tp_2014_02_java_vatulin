@@ -38,12 +38,7 @@ public class GameSession {
     }
 
     private void nextTurn() {
-        byte index = 0;
-        for ( ; index < usersId.size(); ++index) {
-            if (turnUserId == usersId.get(index))
-                break;
-        }
-
+        int index = usersId.indexOf(turnUserId);
         for (int i = 0; i < usersId.size(); ++i) {
             if (++index == usersId.size())
                 index = 0;
@@ -55,7 +50,7 @@ public class GameSession {
     }
 
     public GameSession(LinkedList<String> usersId) {
-        this.usersId = (LinkedList)usersId.clone();
+        this.usersId = (LinkedList<String>)usersId.clone();
         this.turnUserId = this.usersId.get(new Random().nextInt(this.usersId.size()));
         this.turnStartDate = new Date();
         this.gameField = new byte[gameRes.getFIELD_SIZE()][gameRes.getFIELD_SIZE()];
@@ -66,7 +61,7 @@ public class GameSession {
     }
 
     public void userClick(String userId, int x, int y) {
-        if (userId != turnUserId ||
+        if (!userId.equals(turnUserId) ||
             x < 0 || x >= gameRes.getFIELD_SIZE() ||
             y < 0 || y > gameRes.getFIELD_SIZE() ||
             gameField[x][y] != -1)
@@ -75,14 +70,10 @@ public class GameSession {
             return;
         }
 
-        byte index = 0;
-        for ( ; index < usersId.size(); ++index) {
-            if (userId == usersId.get(index))
-                break;
-        }
+        int index = usersId.indexOf(turnUserId);
 
         lastResult = index;
-        gameField[x][y] = index;
+        gameField[x][y] = (byte)index;
 
         for (int dirX = -1; dirX <= 1; ++dirX) {
             for (int dirY = 0; dirY <= 1; ++dirY) {
@@ -103,7 +94,7 @@ public class GameSession {
     }
 
     public boolean kickTurnPlayer(String askedUserId) {
-        if (askedUserId == turnUserId || winUser != null ||
+        if (askedUserId.equals(turnUserId) || winUser != null ||
             (new Date().getTime() - turnStartDate.getTime()) / 1000 <= gameRes.getTURN_SAFE_TIME()) {
             return false;
         }
@@ -147,7 +138,7 @@ public class GameSession {
                 if (this.gameField[i][j] == -1)
                     result += 'n';
                 else
-                    result += new Integer(gameField[i][j]).toString();
+                    result += Integer.toString(gameField[i][j]);
             }
         return result;
     }

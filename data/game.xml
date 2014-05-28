@@ -1,5 +1,5 @@
 <class type="utils.resources.Game">
     <FIELD_SIZE>16</FIELD_SIZE>
     <NEED_PLAYERS>2</NEED_PLAYERS>
-    <TURN_SAFE_TIME>3</TURN_SAFE_TIME>
+    <TURN_SAFE_TIME>60</TURN_SAFE_TIME>
 </class>

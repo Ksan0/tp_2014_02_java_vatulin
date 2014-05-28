@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class UserSession {
     private String login;
     private String sessionId;
-    private Status status = null;
+    private volatile Status status = null;
     private AccountServiceError error = new AccountServiceError();
     private ConcurrentLinkedQueue<String> infoForSend = new ConcurrentLinkedQueue<>();
     private AtomicInteger hardRefreshCalculating = new AtomicInteger(-1);

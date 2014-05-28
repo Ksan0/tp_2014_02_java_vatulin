@@ -1,6 +1,6 @@
 if [ "$1" == "start" ]; then
 	if ! [ -f daemonpid ]; then
-		eval "sudo start-stop-daemon -d ~/www/tp_2014_02_java_vatulin/ -Sbmp daemonpid -x /usr/share/maven/bin/mvn -- exec:java -Dexec.mainClass=Main"
+		eval "sudo -u ksan start-stop-daemon -d ~/www/tp_2014_02_java_vatulin/ -Sbmp daemonpid -x /usr/share/maven/bin/mvn -- exec:java -Dexec.mainClass=Main"
 		if [ $? -eq 0 ]; then
 			echo "server started on port 8080"
 		fi
@@ -26,6 +26,7 @@ if [ "$1" == "restart" ]; then
 	exit $?
 fi
 if [ "$arg1" == "" ]; then
+	echo "Help"
 	echo "daemonworks.sh {start | stop | restart}"
 	echo "work with tp_java_123game daemon"
 	exit 0

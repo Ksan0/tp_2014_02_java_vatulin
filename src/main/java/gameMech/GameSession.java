@@ -84,7 +84,7 @@ public class GameSession {
 
                 int count = calculateFilledPointsInDir(x, y, dirX, dirY, index) + 1;
                 count += calculateFilledPointsInDir(x, y, -dirX, -dirY, index);
-                if (count >= 5) {
+                if (count >= gameRes.getPOINTS_TO_WIN()) {
                     this.winUser = this.turnUserId;
                     return;
                 }

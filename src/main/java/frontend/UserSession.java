@@ -19,6 +19,7 @@ public class UserSession {
     private AccountServiceError error = new AccountServiceError();
     private ConcurrentLinkedQueue<String> infoForSend = new ConcurrentLinkedQueue<>();
     private AtomicInteger hardRefreshCalculating = new AtomicInteger(-1);
+    private Date lastRequestDate;
 
     private Address gameMechAddress = null;
     private int gameSessionId = -1;
@@ -70,6 +71,14 @@ public class UserSession {
         long min = sec / 60;
         sec %= 60;
         return String.format("%d:%d", min, sec);
+    }
+
+    public boolean isUserOnline() {
+        utils.resources.Game gameRes = (utils.resources.Game) utils.resources.Resources.getInstance().getResource("data/game.xml");
+        return ( new Date().getTime() - lastRequestDate.getTime() )/1000 < gameRes.getOFFLINE_TIME();
+    }
+    public void updateLastRequestDate() {
+        lastRequestDate = new Date();
     }
 
     public boolean isHardRefreshOff() {

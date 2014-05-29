@@ -40,7 +40,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
         for (String userId: sessionIdToUserSession.keySet()) {
             if (!userId.equals(selfId)) {
                 UserSession userSession = sessionIdToUserSession.get(userId);
-                if (userSession.getStatus() == UserSession.Status.waitingPlayer) {
+                if (userSession.isUserOnline() && userSession.getStatus() == UserSession.Status.waitingPlayer) {
                     playersId.add(userId);
                     if (playersId.size() >= gameResource.getNEED_PLAYERS())
                         break;
@@ -168,6 +168,8 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
                 response.sendRedirect("/");
                 return;
             }
+            userSession.updateLastRequestDate();
+
             Map <String, Object> responseData = new HashMap<>();
             responseData.put("refreshPeriod", "1000");
             responseData.put("serverTime", Frontend.getTime());

@@ -48,6 +48,7 @@ public class GameSession {
                 break;
         }
         turnUserId = usersId.get(index);
+        turnStartDate = new Date();
     }
 
     public GameSession(ArrayList<String> usersId) {

@@ -19,7 +19,7 @@
                         <div class="LoadingMsg">Loading...</div>
                         <div class="GameField"></div>
                     </td>
-                    <td style="width: 30%;">
+                    <td style="width: 40%;">
                         <div class="GameInfo" style="display: none;">
                             <div class="GameTime">Игра длится <span class="GameTimeValue"></span></div> <br/>
                             <div>Игроки:</div>

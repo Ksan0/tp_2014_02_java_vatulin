@@ -19,7 +19,7 @@ public class UserSession {
     private AccountServiceError error = new AccountServiceError();
     private ConcurrentLinkedQueue<String> infoForSend = new ConcurrentLinkedQueue<>();
     private AtomicInteger hardRefreshCalculating = new AtomicInteger(-1);
-    private Date lastRequestDate;
+    private Date lastRequestDate = new Date();
 
     private Address gameMechAddress = null;
     private int gameSessionId = -1;

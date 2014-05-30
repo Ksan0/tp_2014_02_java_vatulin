@@ -3,6 +3,7 @@ var yourTurn = false;
 var gameEnd = false;
 var yourId;
 var playersId = new Array();
+var lastColoredButtonClass = null;
 
 
 function clearPlayersExtraInfo() {
@@ -136,9 +137,14 @@ function UpdateGame(data) {
     $(".GameTimeValue")[0].innerHTML = strArr.shift();
 
     if (strArr[0] == "clicked") {
-        var win = (strArr[5] == "win");
+        if (lastColoredButtonClass != null) {
+            $(lastColoredButtonClass)[0].style.backgroundColor = "";
+        }
+        lastColoredButtonClass = '.button_{0}_{1}'.replace('{0}', strArr[1]).replace('{1}', strArr[2]);
 
-        $('.button_{0}_{1}'.replace('{0}', strArr[1]).replace('{1}', strArr[2]))[0].innerHTML = strArr[3];
+        var win = (strArr[5] == "win");
+        $(lastColoredButtonClass)[0].innerHTML = strArr[3];
+        $(lastColoredButtonClass)[0].style.backgroundColor = win ? "red" : "yellow";
         clearPlayersExtraInfo();
 
         if (win) {

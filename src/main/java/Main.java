@@ -51,7 +51,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         VFS vfs = new VFS("");
         Iterator<String> files = vfs.getIterator("data");
-        Resources resources = utils.resources.Resources.getInstance();
+        Resources resources = Resources.getInstance();
         String nextFile;
         while (files.hasNext()){
             nextFile = files.next();

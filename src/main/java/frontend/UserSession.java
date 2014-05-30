@@ -3,10 +3,8 @@ package frontend;
 import accountService.AccountServiceError;
 import message.Address;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**

@@ -2,7 +2,6 @@ package frontend.message;
 
 import accountService.AccountServiceError;
 import frontend.Frontend;
-import frontend.message.MsgToFrontend;
 import message.Address;
 
 /**

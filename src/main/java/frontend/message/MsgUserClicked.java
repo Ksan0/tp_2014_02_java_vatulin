@@ -1,7 +1,6 @@
 package frontend.message;
 
 import frontend.Frontend;
-import frontend.message.MsgToFrontend;
 import message.Address;
 
 import java.util.ArrayList;

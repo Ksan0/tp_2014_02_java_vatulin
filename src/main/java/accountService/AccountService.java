@@ -14,19 +14,24 @@ import java.sql.SQLException;
  * oppa google style
  */
 public class AccountService implements Runnable, Abonent{
-    private final utils.resources.Connection DB_CONNECTION_PARAMS;
     private final Address address;
+    private final String dbConnParamUrl;
+    private final String dbConnParamUser;
+    private final String dbConnParamPassword;
     private final MessageService messageService;
     private Connection dbconn = null;
 
     private void openConnection() {
+        if (this.dbConnParamUrl == null)
+            return;
+
         try {
             if (this.dbconn != null && !this.dbconn.isClosed())
                 this.dbconn.close();
 
-            this.dbconn = DriverManager.getConnection(  DB_CONNECTION_PARAMS.getDB_URL(),
-                                                        DB_CONNECTION_PARAMS.getDB_USER(),
-                                                        DB_CONNECTION_PARAMS.getDB_PASSWORD()
+            this.dbconn = DriverManager.getConnection(  dbConnParamUrl,
+                                                        dbConnParamUser,
+                                                        dbConnParamPassword
                                                      );
         } catch (SQLException e) {
             e.printStackTrace();
@@ -45,11 +50,40 @@ public class AccountService implements Runnable, Abonent{
     }
 
     public AccountService(MessageService messageService, utils.resources.Connection connParams){
-        DB_CONNECTION_PARAMS = connParams;
-        address = new Address();
+        this.address = new Address();
+
         this.messageService = messageService;
-        this.messageService.addService(this);
-        this.messageService.getAddressService().setAccountServiceAddress(address);
+        if (messageService != null) {
+            this.messageService.addService(this);
+            this.messageService.getAddressService().setAccountServiceAddress(address);
+        }
+
+        if (connParams != null) {
+            this.dbConnParamUrl = connParams.getDB_URL();
+            this.dbConnParamUser = connParams.getDB_USER();
+            this.dbConnParamPassword = connParams.getDB_PASSWORD();
+        } else {
+            this.dbConnParamUrl = null;
+            this.dbConnParamUser = null;
+            this.dbConnParamPassword = null;
+        }
+
+        openConnection();
+    }
+    public AccountService(MessageService messageService,
+                            String dbConnParamUrl, String dbConnParamUser, String dbConnParamPassword) {
+        this.address = new Address();
+
+        this.messageService = messageService;
+        if (messageService != null) {
+            this.messageService.addService(this);
+            this.messageService.getAddressService().setAccountServiceAddress(address);
+        }
+
+        this.dbConnParamUrl = dbConnParamUrl;
+        this.dbConnParamUser = dbConnParamUser;
+        this.dbConnParamPassword = dbConnParamPassword;
+
         openConnection();
     }
 
@@ -114,6 +148,12 @@ public class AccountService implements Runnable, Abonent{
                 e.printStackTrace();
             }
         }
+    }
+
+
+    @SuppressWarnings("use AccountService.execOneMessage for tests only")
+    public void execOneMessage() {
+        messageService.execForAbonent(this);
     }
 
     public MessageService getMessageSystem(){

@@ -347,4 +347,8 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
         }
     }
 
+    @SuppressWarnings("use Frontend.execOneMessage for tests only")
+    public void execOneMessage() {
+        messageService.execForAbonent(this);
+    }
 }

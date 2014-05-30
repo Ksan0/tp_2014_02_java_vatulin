@@ -16,9 +16,9 @@ public abstract class MsgToFrontend extends Msg {
     @Override
     protected void exec(Abonent abonent) {
         if(abonent instanceof Frontend){
-            exec((frontend.Frontend)abonent);
+            exec((Frontend)abonent);
         }
     }
 
-    abstract void exec(frontend.Frontend frontend);
+    abstract void exec(Frontend frontend);
 }

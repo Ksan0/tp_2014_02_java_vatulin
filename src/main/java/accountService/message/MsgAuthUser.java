@@ -22,7 +22,7 @@ public class MsgAuthUser extends MsgToAS {
     }
 
     @Override
-    void exec(AccountService accountService) {
+    protected void exec(AccountService accountService) {
         MessageService ms = accountService.getMessageSystem();
         AccountServiceError error = accountService.getUser(login, password);
         ms.sendMessage(new MsgUserError(this.getTo(), this.getFrom(), error, sessionId));

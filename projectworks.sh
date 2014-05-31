@@ -19,9 +19,9 @@ if [ "$1" == "stop" ]; then
 	exit $?
 fi
 if [ "$1" == "restart" ]; then
-	eval "bash daemonworks.sh stop"
+	eval "bash projectworks.sh stop"
 	if [ $? -eq 0 ]; then
-		eval "bash daemonworks.sh start"
+		eval "bash projectworks.sh start"
 	fi
 	exit $?
 fi

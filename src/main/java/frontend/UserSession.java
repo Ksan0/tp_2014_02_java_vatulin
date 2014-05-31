@@ -73,7 +73,7 @@ public class UserSession {
 
     public boolean isUserOnline() {
         utils.resources.Game gameRes = (utils.resources.Game) utils.resources.Resources.getInstance().getResource("data/game.xml");
-        return ( new Date().getTime() - lastRequestDate.getTime() )/1000 < gameRes.getOFFLINE_TIME();
+        return ( new Date().getTime() - lastRequestDate.getTime() )/1000 < gameRes.getOfflineTime();
     }
     public void updateLastRequestDate() {
         lastRequestDate = new Date();

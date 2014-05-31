@@ -4,32 +4,32 @@ package utils.resources;
  * oppa google style
  */
 public class URL implements Resource{
-    private String LOGIN;
-    private String REGISTER;
-    private String TIMER_PAGE;
-    private String REGISTRATION_FORM;
-    private String GAME;
-    private String AJAX;
+    private String login;
+    private String register;
+    private String timerPage;
+    private String registrationForm;
+    private String game;
+    private String ajax;
 
-    public String getLOGIN() {
-        return LOGIN;
+    public String getLogin() {
+        return login;
     }
 
-    public String getREGISTER() {
-        return REGISTER;
+    public String getRegister() {
+        return register;
     }
 
-    public String getTIMER_PAGE() {
-        return TIMER_PAGE;
+    public String getTimerPage() {
+        return timerPage;
     }
 
-    public String getREGISTRATION_FORM() {
-        return REGISTRATION_FORM;
+    public String getRegistrationForm() {
+        return registrationForm;
     }
 
-    public String getGAME() {
-        return GAME;
+    public String getGame() {
+        return game;
     }
 
-    public String getAJAX() { return AJAX; }
+    public String getAjax() { return ajax; }
 }

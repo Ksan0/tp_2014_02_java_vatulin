@@ -1,8 +1,5 @@
 package gameMech;
 
-import accountService.AccountServiceError;
-import sun.awt.image.ImageWatched;
-
 import java.util.ArrayList;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -29,7 +26,7 @@ public class GameSession {
         for (int i = 1; i < 5; ++i) {
             tmpX += dirX;
             tmpY += dirY;
-            if (tmpX < 0 || tmpX >= gameRes.getFIELD_SIZE() || tmpY < 0 || tmpY >= gameRes.getFIELD_SIZE() ||
+            if (tmpX < 0 || tmpX >= gameRes.getFieldSize() || tmpY < 0 || tmpY >= gameRes.getFieldSize() ||
                     gameField[tmpX][tmpY] != index) {
                 break;
             }
@@ -55,17 +52,17 @@ public class GameSession {
         this.usersId = new ArrayList<>(usersId);
         this.turnUserId = this.usersId.get(new Random().nextInt(this.usersId.size()));
         this.turnStartDate = new Date();
-        this.gameField = new byte[gameRes.getFIELD_SIZE()][gameRes.getFIELD_SIZE()];
-        for (int i = 0; i < gameRes.getFIELD_SIZE(); ++i)
-            for (int j = 0; j < gameRes.getFIELD_SIZE(); ++j) {
+        this.gameField = new byte[gameRes.getFieldSize()][gameRes.getFieldSize()];
+        for (int i = 0; i < gameRes.getFieldSize(); ++i)
+            for (int j = 0; j < gameRes.getFieldSize(); ++j) {
                 this.gameField[i][j] = -1;
             }
     }
 
     public void userClick(String userId, int x, int y) {
         if (!userId.equals(turnUserId) ||
-            x < 0 || x >= gameRes.getFIELD_SIZE() ||
-            y < 0 || y > gameRes.getFIELD_SIZE() ||
+            x < 0 || x >= gameRes.getFieldSize() ||
+            y < 0 || y > gameRes.getFieldSize() ||
             gameField[x][y] != -1)
         {
             lastResult = -1;
@@ -85,7 +82,7 @@ public class GameSession {
 
                 int count = calculateFilledPointsInDir(x, y, dirX, dirY, index) + 1;
                 count += calculateFilledPointsInDir(x, y, -dirX, -dirY, index);
-                if (count >= gameRes.getPOINTS_TO_WIN()) {
+                if (count >= gameRes.getPointsToWin()) {
                     this.winUser = this.turnUserId;
                     return;
                 }
@@ -97,7 +94,7 @@ public class GameSession {
 
     public boolean kickTurnPlayer(String askedUserId) {
         if (askedUserId.equals(turnUserId) || winUser != null ||
-            (new Date().getTime() - turnStartDate.getTime()) / 1000 <= gameRes.getTURN_SAFE_TIME()) {
+            (new Date().getTime() - turnStartDate.getTime()) / 1000 <= gameRes.getTurnSafeTime()) {
             return false;
         }
 
@@ -135,8 +132,8 @@ public class GameSession {
     }
     public String getField() {
         String result = "";
-        for (int j = 0; j < gameRes.getFIELD_SIZE(); ++j)
-            for (int i = 0; i < gameRes.getFIELD_SIZE(); ++i) {
+        for (int j = 0; j < gameRes.getFieldSize(); ++j)
+            for (int i = 0; i < gameRes.getFieldSize(); ++i) {
                 if (this.gameField[i][j] == -1)
                     result += 'n';
                 else

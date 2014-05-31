@@ -1,6 +1,5 @@
 package accountService;
 
-import org.mockito.exceptions.verification.NeverWantedButInvoked;
 import utils.resources.InfoMessages;
 import utils.resources.Resources;
 
@@ -30,13 +29,13 @@ public class AccountServiceError {
 
         switch (type) {
             case DB_noConnection:
-                return im.getDB_NO_CONNECTION();
+                return im.getDbNoConnection();
             case Signin_badLoginOrPassword:
-                return im.getBAD_LOGIN_OR_PASSWORD();
+                return im.getBadLoginOrPassword();
             case Sigiup_userAlreadyExists:
-                return im.getUSER_ALREADY_EXISTS();
+                return im.getUserAlreadyExists();
             case Signup_badUserForm:
-                return im.getBAD_USER_FORM();
+                return im.getBadUserForm();
         }
 
         return null;

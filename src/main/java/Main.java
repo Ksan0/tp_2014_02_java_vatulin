@@ -61,7 +61,7 @@ public class Main {
         }
 
         Connection con = (Connection)resources.getResource("data/connection.xml");
-        Server server = buildServer(con.getPORT(), con);
+        Server server = buildServer(con.getPort(), con);
         server.start();
         server.join();
     }

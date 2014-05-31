@@ -42,13 +42,13 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
                 UserSession userSession = sessionIdToUserSession.get(userId);
                 if (userSession.isUserOnline() && userSession.getStatus() == UserSession.Status.waitingPlayer) {
                     playersId.add(userId);
-                    if (playersId.size() >= gameResource.getNEED_PLAYERS())
+                    if (playersId.size() >= gameResource.getNeedPlayers())
                         break;
                 }
             }
         }
 
-        if (playersId.size() < gameResource.getNEED_PLAYERS())
+        if (playersId.size() < gameResource.getNeedPlayers())
             return null;
         return playersId;
     }
@@ -97,7 +97,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
 
             String tmpl = "refreshHard %d %d " + field + " %s %d";
             String id = winnerId != null ? winnerId : turnUserId;
-            String send = String.format(tmpl, gameRes.getFIELD_SIZE(), gameRes.getFIELD_SIZE(),
+            String send = String.format(tmpl, gameRes.getFieldSize(), gameRes.getFieldSize(),
                                         userId, usersId.size());
             Integer count = 0;
             for (String uId: usersId) {
@@ -155,14 +155,14 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
         Template templateResource = (Template) Resources.getInstance().getResource("data/template.xml");
 
         if (path.isEmpty()) {
-            sendPage(response, templateResource.getINDEX(), "");
+            sendPage(response, templateResource.getIndex(), "");
             return;
         }
-        if (path.equals(urlResource.getREGISTRATION_FORM())) {
-            sendPage(response, templateResource.getREGISTRATION(), "");
+        if (path.equals(urlResource.getRegistrationForm())) {
+            sendPage(response, templateResource.getRegistration(), "");
             return;
         }
-        if (path.equals(urlResource.getTIMER_PAGE())) {
+        if (path.equals(urlResource.getTimerPage())) {
             UserSession userSession = sessionIdToUserSession.get(sessionID);
             if (userSession == null){
                 response.sendRedirect("/");
@@ -210,17 +210,17 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
             }
             responseData.put("userID", msg);
 
-            sendPage(response, templateResource.getTIMER(), responseData);
+            sendPage(response, templateResource.getTimer(), responseData);
             return;
         }
-        if(path.equals(urlResource.getGAME())) {
+        if(path.equals(urlResource.getGame())) {
             Map <String, Object> responseData = new HashMap<>();
             responseData.put("refreshPeriod", "1000");
             responseData.put("opponentLogin", "Mem");
-            sendPage(response, templateResource.getGAME(), responseData);
+            sendPage(response, templateResource.getGame(), responseData);
             return;
         }
-        if(path.equals(urlResource.getAJAX())) {
+        if(path.equals(urlResource.getAjax())) {
             String action = request.getParameter("action");
             UserSession userSession = sessionIdToUserSession.get(sessionID);
             if (userSession == null) {
@@ -284,7 +284,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
 
         URL urlResource = (URL) Resources.getInstance().getResource("data/url.xml");
 
-        if (path.equals(urlResource.getREGISTER())) {
+        if (path.equals(urlResource.getRegister())) {
             String login = request.getParameter("login");
             String password = request.getParameter("password");
             messageService.sendMessage( new MsgAddUser(
@@ -297,7 +297,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
                                         );
             sessionIdToUserSession.put(ssid, new UserSession(ssid, login, UserSession.Status.waitingReg));
         }
-        if (path.equals(urlResource.getLOGIN())) {
+        if (path.equals(urlResource.getLogin())) {
             String login = request.getParameter("login");
             String password = request.getParameter("password");
             messageService.sendMessage( new MsgAuthUser(
@@ -318,7 +318,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable{
             sessionIdToUserSession.put(ssid, new UserSession(ssid, login, UserSession.Status.waitingLogin));
         }
 
-        response.sendRedirect(urlResource.getTIMER_PAGE());
+        response.sendRedirect(urlResource.getTimerPage());
     }
 
     public void sendPage(HttpServletResponse response, String tmpl,

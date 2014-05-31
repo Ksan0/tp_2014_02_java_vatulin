@@ -1,7 +1,7 @@
 <class type="utils.resources.Template">
-    <INDEX>index.tml</INDEX>
-    <REGISTRATION>registration.tml</REGISTRATION>
-    <TIMER>timer.tml</TIMER>
-    <GAME>game.tml</GAME>
+    <index>index.tml</index>
+    <registration>registration.tml</registration>
+    <timer>timer.tml</timer>
+    <game>game.tml</game>
 </class>
 

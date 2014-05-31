@@ -20,5 +20,5 @@ public abstract class MsgToAS extends Msg {
         }
     }
 
-    abstract void exec(AccountService accountService);
+    protected abstract void exec(AccountService accountService);
 }

@@ -38,35 +38,17 @@ public class AccountService implements Runnable, Abonent{
             this.dbconn = null;
         }
     }
-    private boolean isConnectionClosed() {
-        try {
-            if (this.dbconn == null || this.dbconn.isClosed())
-                return true;
-        } catch (SQLException e) {
-            return true;
-        }
-
-        return false;
-    }
 
     public AccountService(MessageService messageService, utils.resources.Connection connParams){
         this.address = new Address();
 
         this.messageService = messageService;
-        if (messageService != null) {
-            this.messageService.addService(this);
-            this.messageService.getAddressService().setAccountServiceAddress(address);
-        }
+        this.messageService.addService(this);
+        this.messageService.getAddressService().setAccountServiceAddress(address);
 
-        if (connParams != null) {
-            this.dbConnParamUrl = connParams.getDB_URL();
-            this.dbConnParamUser = connParams.getDB_USER();
-            this.dbConnParamPassword = connParams.getDB_PASSWORD();
-        } else {
-            this.dbConnParamUrl = null;
-            this.dbConnParamUser = null;
-            this.dbConnParamPassword = null;
-        }
+        this.dbConnParamUrl = connParams.getDbUrl();
+        this.dbConnParamUser = connParams.getDbUser();
+        this.dbConnParamPassword = connParams.getDbPassword();
 
         openConnection();
     }
@@ -75,16 +57,25 @@ public class AccountService implements Runnable, Abonent{
         this.address = new Address();
 
         this.messageService = messageService;
-        if (messageService != null) {
-            this.messageService.addService(this);
-            this.messageService.getAddressService().setAccountServiceAddress(address);
-        }
+        this.messageService.addService(this);
+        this.messageService.getAddressService().setAccountServiceAddress(address);
 
         this.dbConnParamUrl = dbConnParamUrl;
         this.dbConnParamUser = dbConnParamUser;
         this.dbConnParamPassword = dbConnParamPassword;
 
         openConnection();
+    }
+
+    public boolean isConnectionClosed() {
+        try {
+            if (this.dbconn == null || this.dbconn.isClosed())
+                return true;
+        } catch (SQLException e) {
+            return true;
+        }
+
+        return false;
     }
 
     public Address getAddress(){

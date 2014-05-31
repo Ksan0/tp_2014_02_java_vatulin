@@ -4,24 +4,24 @@ package utils.resources;
  * oppa google style
  */
 public class Template implements Resource {
-    private String INDEX;
-    private String REGISTRATION;
-    private String TIMER;
-    private String GAME;
+    private String index;
+    private String registration;
+    private String timer;
+    private String game;
 
-    public String getREGISTRATION() {
-        return REGISTRATION;
+    public String getRegistration() {
+        return registration;
     }
 
-    public String getINDEX() {
-        return INDEX;
+    public String getIndex() {
+        return index;
     }
 
-    public String getTIMER() {
-        return TIMER;
+    public String getTimer() {
+        return timer;
     }
 
-    public String getGAME() {
-        return GAME;
+    public String getGame() {
+        return game;
     }
 }

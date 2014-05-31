@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.5.35, for debian-linux-gnu (x86_64)
 --
--- Host: localhost    Database: jproj_db
+-- Host: localhost    Database: test_jproj_db
 -- ------------------------------------------------------
 -- Server version	5.5.35-0ubuntu0.12.04.2
 
@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
   `userId` int(11) NOT NULL AUTO_INCREMENT,
-  `name` char(30) COLLATE utf8_unicode_ci NOT NULL,
+  `login` char(30) COLLATE utf8_unicode_ci NOT NULL,
   `password` char(30) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`userId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
